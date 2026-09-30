@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ตั้งค่าเว็บไซต์สำหรับมือถือ</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif;color:#17324d;background:#f3f7fb}*{box-sizing:border-box}body{margin:0;padding:24px 16px 48px}.wrap{max-width:680px;margin:auto}.card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 8px 28px #17324d14}h1{font-size:clamp(24px,6vw,32px);line-height:1.25;margin:0 0 12px}p{line-height:1.7;margin:10px 0}.note{background:#eaf3ff;border-left:4px solid #2674c8;border-radius:8px;padding:12px 16px}h2{font-size:19px;margin:24px 0 10px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#12263d;color:#eef6ff;border-radius:12px;padding:16px;font-size:13px;line-height:1.6}button{border:0;border-radius:12px;background:#1568bf;color:white;font:inherit;font-weight:700;padding:14px 18px;min-height:48px;cursor:pointer}button+button{background:#e9f2fc;color:#155da4}.actions{display:flex;flex-wrap:wrap;gap:10px}small{color:#52687b}
+</style>
+</head>
+<body><main class="wrap"><article class="card">
+<h1>ไฟล์ตั้งค่าเว็บไซต์</h1>
+<p class="note">ไฟล์ที่แนบมาเป็นการตั้งค่า <strong>Netlify</strong> สำหรับเผยแพร่เว็บไซต์ ยังไม่ใช่ตัวเว็บไซต์ จึงไม่มีหน้าแอปให้ใช้งานจากไฟล์นี้เพียงไฟล์เดียว</p>
+<h2>เนื้อหาไฟล์</h2>
+<pre id="content">[build]
+  publish = "."
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200</pre>
+<div class="actions"><button type="button" id="copy">คัดลอกการตั้งค่า</button><button type="button" id="download">ดาวน์โหลด netlify.toml</button></div>
+<h2>ถ้าต้องการเปิดแอปบนมือถือ</h2>
+<p>ต้องมีไฟล์ <strong>index.html</strong> ของแอปด้วย แล้วนำไปเผยแพร่พร้อม <strong>netlify.toml</strong> จึงจะได้ลิงก์สำหรับเปิดในเบราว์เซอร์มือถือ หากส่งไฟล์เว็บส่วนที่เหลือมา ผมจะปรับหน้าจอและการใช้งานให้เหมาะกับมือถือได้</p>
+<small>หน้านี้ใช้เปิดดูการตั้งค่าได้แม้ไม่ได้เชื่อมต่ออินเทอร์เน็ต</small>
+</article></main>
+<script>
+const content=document.getElementById('content').textContent;
+document.getElementById('copy').onclick=async e=>{try{await navigator.clipboard.writeText(content);e.target.textContent='คัดลอกแล้ว'}catch{e.target.textContent='กดค้างที่ข้อความเพื่อคัดลอก'}};
+document.getElementById('download').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content+'\n'],{type:'text/plain'}));a.download='netlify.toml';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+</script></body></html>
